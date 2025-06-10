@@ -49,10 +49,8 @@ function Sidebar() {
                             </h1>
                             <p className="text-slate-300 text-sm mt-1">Tableau de bord</p>
                         </div>
-                    </div>
-
-                    {/* Navigation */}
-                    <nav className="flex-1 p-6">
+                    </div>                    {/* Navigation */}
+                    <nav className="flex-1 p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30">
                         <ul className="space-y-2">
                             {menuItems.map((item) => {
                                 const Icon = item.icon;
@@ -115,10 +113,8 @@ function Sidebar() {
                                 );
                             })}
                         </ul>
-                    </nav>
-
-                    {/* Footer - Logout */}
-                    <div className="p-6 border-t border-white/10">
+                    </nav>                    {/* Footer - Logout */}
+                    <div className="p-6 border-t border-white/10 flex-shrink-0">
                         <Link to="/login">
                             <button
                                 className="
