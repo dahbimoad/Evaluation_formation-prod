@@ -2,14 +2,27 @@ import React, { useState } from "react";
 import { FaUsers, FaClipboardList, FaChartBar, FaFileAlt, FaHome, FaSignOutAlt } from 'react-icons/fa';
 import { ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // Importer useAuth
 import logo from "../images/HomePage/Eval.png";
 
 function Sidebar() {
     const location = useLocation();
     const [hoveredItem, setHoveredItem] = useState('');
+    const { logout } = useAuth(); // Utiliser la fonction logout du contexte
     
     const isActive = (path) => {
         return location.pathname === path || location.pathname.startsWith(path + '/');
+    };
+
+    // Fonction pour gérer la déconnexion
+    const handleLogout = async () => {
+        try {
+            await logout(); // Cette fonction gère déjà tout : API call, nettoyage des tokens, redirection
+        } catch (error) {
+            console.error("Erreur lors de la déconnexion:", error);
+            // En cas d'erreur, forcer la redirection quand même
+            window.location.href = '/login';
+        }
     };
 
     const menuItems = [
@@ -19,7 +32,6 @@ function Sidebar() {
         { icon: FaUsers, label: "Professionnels", path: "/admin/pro", id: "pro", color: "text-yellow-400" },
         { icon: FaUsers, label: "Filieres", path: "/admin/formations", id: "formations", color: "text-yellow-400" },
         { icon: FaUsers, label: "Modules", path: "/admin/modules", id: "modules", color: "text-yellow-400" },
-
         { icon: FaClipboardList, label: "Questionnaires", path: "/admin/questionnaire", id: "questionnaire", color: "text-yellow-400" },
         { icon: FaFileAlt, label: "Publications", path: "/admin/publications", id: "publications", color: "text-yellow-400" },
         { icon: FaChartBar, label: "Statistiques", path: "/admin/statistics", id: "statistics", color: "text-yellow-400" },
@@ -49,7 +61,9 @@ function Sidebar() {
                             </h1>
                             <p className="text-slate-300 text-sm mt-1">Tableau de bord</p>
                         </div>
-                    </div>                    {/* Navigation */}
+                    </div>
+
+                    {/* Navigation */}
                     <nav className="flex-1 p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30">
                         <ul className="space-y-2">
                             {menuItems.map((item) => {
@@ -113,28 +127,29 @@ function Sidebar() {
                                 );
                             })}
                         </ul>
-                    </nav>                    {/* Footer - Logout */}
+                    </nav>
+
+                    {/* Footer - Logout */}
                     <div className="p-6 border-t border-white/10 flex-shrink-0">
-                        <Link to="/login">
-                            <button
-                                className="
-                                    group relative w-full flex items-center justify-center px-6 py-4 
-                                    bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700
-                                    text-white font-semibold rounded-xl transition-all duration-300 
-                                    shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:shadow-xl
-                                    transform hover:-translate-y-1 active:translate-y-0
-                                    overflow-hidden
-                                "
-                                onMouseEnter={() => setHoveredItem('logout')}
-                                onMouseLeave={() => setHoveredItem('')}
-                            >
-                                {/* Background animation */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-                                
-                                <FaSignOutAlt className="relative z-10 mr-3 w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                                <span className="relative z-10">Se déconnecter</span>
-                            </button>
-                        </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="
+                                group relative w-full flex items-center justify-center px-6 py-4 
+                                bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700
+                                text-white font-semibold rounded-xl transition-all duration-300 
+                                shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:shadow-xl
+                                transform hover:-translate-y-1 active:translate-y-0
+                                overflow-hidden
+                            "
+                            onMouseEnter={() => setHoveredItem('logout')}
+                            onMouseLeave={() => setHoveredItem('')}
+                        >
+                            {/* Background animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                            
+                            <FaSignOutAlt className="relative z-10 mr-3 w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                            <span className="relative z-10">Se déconnecter</span>
+                        </button>
                     </div>
                 </div>
             </div>
