@@ -14,7 +14,8 @@ const ScoringExplanation = ({ isOpen, onClose }) => {
             setDownloadSuccess(false);
             
             // Call the backend endpoint
-            const response = await fetch('http://localhost:5246/api/export/scoring-guide');
+            const response = await fetch(`${import.meta.env.VITE_STATISTICS_API_URL || 'http://localhost:5246/api'}/export/scoring-guide`);
+
             
             if (!response.ok) {
                 throw new Error(`Erreur ${response.status}: ${response.statusText}`);
